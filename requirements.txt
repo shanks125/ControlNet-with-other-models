@@ -1,8 +1,7 @@
---extra-index-url https://download.pytorch.org/whl/cu117
 addict
 albumentations
 einops
-gradio
+gradio==3.20.1
 huggingface-hub
 imageio
 imageio-ffmpeg
@@ -16,8 +15,8 @@ pytorch-lightning
 safetensors
 timm
 yapf
-torch
-https://download.pytorch.org/whl/cu117/torch-1.13.1%2Bcu117-cp38-cp38-linux_x86_64.whl
+--extra-index-url https://download.pytorch.org/whl/cu117
+torch==1.13.1+cu117
 torchvision==0.14.1+cu117
 transformers
 https://github.com/ZyCromerZ/xformers_builds/releases/download/xformers-2023-02-12-Py-3.8-Cuda-11.8.0-PyTorch-1.13.1%2Bcu117-ubuntu-18.04/xformers-0.0.17+12c076d.d2
