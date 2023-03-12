@@ -1,7 +1,7 @@
 addict
 albumentations
 einops
-gradio==3.20.1
+gradio
 huggingface-hub
 imageio
 imageio-ffmpeg
