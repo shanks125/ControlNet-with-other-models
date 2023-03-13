@@ -16,8 +16,8 @@ safetensors
 timm
 yapf
 --extra-index-url https://download.pytorch.org/whl/nightly/cu118
-https://download.pytorch.org/whl/nightly/cu118/torch-2.1.0.dev20230312%2Bcu118-cp39-cp39-linux_x86_64.whl
-https://download.pytorch.org/whl/nightly/cu118/torchvision-0.15.0.dev20230312%2Bcu118-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/nightly/cu118/torch-2.1.0.dev20230312%2Bcu118-cp311-cp11-linux_x86_64.whl
+https://download.pytorch.org/whl/nightly/cu118/torchvision-0.15.0.dev20230312%2Bcu118-cp311-cp311-linux_x86_64.whl
 transformers
 xformers
 
