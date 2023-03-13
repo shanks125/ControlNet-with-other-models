@@ -19,4 +19,4 @@ torchvision==0.14.1
 transformers==4.26.1
 xformers==0.0.17.dev473
 yapf==0.32.0
-Triton=2.0.0
+Triton==2.0.0
