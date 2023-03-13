@@ -20,4 +20,5 @@ torch==1.13.1+cu117
 torchvision==0.14.1+cu117
 transformers
 https://files.pythonhosted.org/packages/8c/a3/5ee3fff49fd2e5c5ca48266cb65b433818bb1c900ade0105322665371a13/xformers-0.0.17.dev473-cp39-cp39-manylinux2014_x86_64.whl
+https://files.pythonhosted.org/packages/db/e0/0e09cdadfe53516dacda727c2cf488e1a0c6c40f798bd0f7ccbc0daa0ce5/tensorflow-2.12.0rc1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
