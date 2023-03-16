@@ -14,9 +14,12 @@ prettytable==3.6.0
 pytorch-lightning==1.9.4
 safetensors==0.3.0
 timm==0.6.12
-torch==1.13.1
-torchvision==0.14.1
-transformers==4.26.1
-xformers==0.0.17.dev473
+https://download.pytorch.org/whl/cu118/torch-2.0.0%2Bcu118-cp39-cp39-linux_x86_64.whl
+https://download.pytorch.org/whl/cu118/torchvision-0.15.1%2Bcu118-cp39-cp39-linux_x86_64.whl
+transformers==4.27.1
+datasets==2.9.0
+accelerate==0.17.1
+evaluate==0.4.0
+xformers==0.0.17.dev476
 yapf==0.32.0
 Triton==2.0.0
