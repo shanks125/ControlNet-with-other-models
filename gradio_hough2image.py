@@ -20,7 +20,7 @@ def create_demo(process, max_images=12):
                                             step=1)
                     image_resolution = gr.Slider(label='Image Resolution',
                                                  minimum=256,
-                                                 maximum=768,
+                                                 maximum=1024,
                                                  value=512,
                                                  step=256)
                     detect_resolution = gr.Slider(label='Hough Resolution',
