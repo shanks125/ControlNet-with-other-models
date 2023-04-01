@@ -98,6 +98,6 @@ with gr.Accordion(label='Base model', open=False):
         model.set_base_model(repo, filename)
         current_base_model.value = f'https://github.com/{repo}/releases/download/{filename}'
 
-    change_base_model_button.set_action(set_base_model, inputs=[base_model_repo, base_model_filename])
+    change_base_model_button.set_click_handler(set_base_model, inputs=[base_model_repo, base_model_filename])
 
 demo.queue(api_open=False).launch()
