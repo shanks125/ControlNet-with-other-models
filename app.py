@@ -77,16 +77,8 @@ with gr.Blocks(css='style.css') as demo:
     with gr.Accordion(label='Base model', open=False):
         current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
         with gr.Row():
-            base_model_repo = gr.Dropdown(label='Base model repo', 
-                                          options=[('Option 1', 'https://github.com/option1'), 
-                                                   ('Option 2', 'https://github.com/option2'), 
-                                                   ('Option 3', 'https://github.com/option3')], 
-                                          value='https://github.com/option1')
-            base_model_filename = gr.Dropdown(label='Base model file', 
-                                               options=[('Option 1', 'model1.pt'), 
-                                                        ('Option 2', 'model2.pt'), 
-                                                        ('Option 3', 'model3.pt')], 
-                                               value='model1.pt')
+            base_model_repo = gr.dropdown(label='Base model repo', choices=['Option 1', 'Option 2', 'Option 3'], default='Option 1')
+            base_model_filename = gr.dropdown(label='Base model file', choices=['Option 1', 'Option 2', 'Option 3'], default='Option 1')
         change_base_model_button = gr.Button('Change base model')
         gr.Markdown('''- You can use other base models by specifying the repository name and filename. The base model must be compatible with Stable Diffusion v1.5.''')
         change_base_model_button.click(fn=model.set_base_model, inputs=[base_model_repo, base_model_filename], outputs=current_base_model)
