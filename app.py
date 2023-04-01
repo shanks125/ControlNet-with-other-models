@@ -87,17 +87,17 @@ with gr.Accordion(label='Base model', open=False):
     with gr.Row():
         base_model_repo = gr.Text(label='Base model repo', max_lines=1, interactive=ALLOW_CHANGING_BASE_MODEL)
         base_model_filename = gr.Text(label='Base model file', max_lines=1, interactive=ALLOW_CHANGING_BASE_MODEL)
-    with gr.Block():
-        change_base_model_button = gr.Button('Change base model')
-        change_base_model_button.on_click(set_base_model)
+    change_base_model_button = gr.Button('Change base model')
     gr.Markdown('''- You can use other base models by specifying the repository name and filename.
     The base model must be compatible with Stable Diffusion v1.5.''')
 
-def set_base_model():
-    selected_base_model = base_model_dropdown.value
-    repo = selected_base_model['repo']
-    filename = selected_base_model['filename']
-    model.set_base_model(repo, filename)
-    current_base_model.value = f'https://github.com/{repo}/releases/download/{filename}'
+    def set_base_model():
+        selected_base_model = base_model_dropdown.value
+        repo = selected_base_model['repo']
+        filename = selected_base_model['filename']
+        model.set_base_model(repo, filename)
+        current_base_model.value = f'https://github.com/{repo}/releases/download/{filename}'
+
+    change_base_model_button.set_action(set_base_model, inputs=[base_model_repo, base_model_filename])
 
 demo.queue(api_open=False).launch()
