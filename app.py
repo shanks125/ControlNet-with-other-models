@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from __future__ import annotations
-from gradio import RadioButton
 
 import os
 import pathlib
@@ -96,7 +95,7 @@ with gr.Accordion(label='Base model', open=False):
     
     base_model_buttons = []
     for option in base_model_options:
-        button = gr.RadioButton(label=option, value=option)
+        button = gr.Radio(label=option, value=option)
         base_model_buttons.append(button)
     
     base_model_repo = gr.Text(label='Base model repo',
