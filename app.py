@@ -80,24 +80,23 @@ with gr.Blocks(css='style.css') as demo:
     {'label': 'Model B', 'value': {'repo': 'modelB_repo', 'filename': 'modelB.pt'}},
 ]
 
-base_model_dropdown = gr.Dropdown(label='Select a base model', options=base_model_options)
+base_model_dropdown = gr.inputs.Dropdown(label='Select a base model', choices=base_model_options)
 
-with gr.Accordion(label='Base model', open=False):
-    current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
-    with gr.Row():
-        base_model_repo = gr.Text(label='Base model repo', max_lines=1, interactive=ALLOW_CHANGING_BASE_MODEL)
-        base_model_filename = gr.Text(label='Base model file', max_lines=1, interactive=ALLOW_CHANGING_BASE_MODEL)
+with gr.Expander('Base model'):
+    current_base_model = gr.outputs.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
+    with gr.Grid(2):
+        base_model_repo = gr.inputs.Textbox(label='Base model repo', lines=1, placeholder=DEFAULT_BASE_MODEL_REPO, default=DEFAULT_BASE_MODEL_REPO, live=True)
+        base_model_filename = gr.inputs.Textbox(label='Base model file', lines=1, placeholder=DEFAULT_BASE_MODEL_FILENAME, default=DEFAULT_BASE_MODEL_FILENAME, live=True)
     change_base_model_button = gr.Button('Change base model')
-    gr.Markdown('''- You can use other base models by specifying the repository name and filename.
-    The base model must be compatible with Stable Diffusion v1.5.''')
+    gr.Label('''- You can use other base models by specifying the repository name and filename.
+The base model must be compatible with Stable Diffusion v1.5.''')
 
     def set_base_model():
-        selected_base_model = base_model_dropdown.value
-        repo = selected_base_model['repo']
-        filename = selected_base_model['filename']
+        repo = base_model_repo.value
+        filename = base_model_filename.value
         model.set_base_model(repo, filename)
-        current_base_model.value = f'https://github.com/{repo}/releases/download/{filename}'
+        current_base_model.update(f'https://github.com/{repo}/releases/download/{filename}')
 
-    change_base_model_button.set_click_handler(set_base_model, inputs=[base_model_repo, base_model_filename])
+    change_base_model_button.set_click_handler(set_base_model)
 
-demo.queue(api_open=False).launch()
+gr.Interface(fn=lambda x: x, inputs=base_model_dropdown, outputs=None).launch()
