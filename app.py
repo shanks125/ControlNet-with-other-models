@@ -49,8 +49,6 @@ ALLOW_CHANGING_BASE_MODEL = 'hysts/ControlNet-with-other-models'
 
 model = Model()
 
-model = Model()
-
 with gr.Blocks(css='style.css') as demo:
     with gr.Tabs():
         with gr.TabItem('Canny'):
