@@ -75,28 +75,35 @@ with gr.Blocks(css='style.css') as demo:
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
     with gr.Accordion(label='Base model', open=False):
-        current_base_model = gr.Text(label='Current base model',
-                                     value=DEFAULT_BASE_MODEL_URL)
-        with gr.Row():
-            base_model_repo = gr.Text(label='Base model repo',
-                                      max_lines=1,
-                                      placeholder=DEFAULT_BASE_MODEL_REPO,
-                                      interactive=ALLOW_CHANGING_BASE_MODEL)
-            base_model_filename = gr.Text(
-                label='Base model file',
-                max_lines=1,
-                placeholder=DEFAULT_BASE_MODEL_FILENAME,
-                interactive=ALLOW_CHANGING_BASE_MODEL)
-        change_base_model_button = gr.Button('Change base model')
-        gr.Markdown(
-            '''- You can use other base models by specifying the repository name and filename.
+    current_base_model = gr.Textbox(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
+    
+    base_model_repo_options = {
+        'Default': 'DEFAULT_BASE_MODEL_REPO_PLACEHOLDER',
+        'Anything-v4.0': 'andite/anything-v4.0',
+        'Something-v2.0': 'user/something-v2.0',
+        'Another-model': 'user/another-model'
+    }
+    base_model_repo = gr.inputs.Dropdown(label='Base model repo', choices=base_model_repo_options)
+    
+    base_model_filename_options = {
+        'Default': 'DEFAULT_BASE_MODEL_FILENAME_PLACEHOLDER',
+        'Filename-1': 'filename1.safetensors',
+        'Filename-2': 'filename2.safetensors',
+        'Filename-3': 'filename3.safetensors'
+    }
+    base_model_filename = gr.inputs.Dropdown(label='Base model file', choices=base_model_filename_options)
+
+    change_base_model_button = gr.Button('Change base model')
+    gr.Markdown('''- You can use other base models by selecting from the dropdowns.
 The base model must be compatible with Stable Diffusion v1.5.''')
 
-    change_base_model_button.click(fn=model.set_base_model,
-                                   inputs=[
-                                       base_model_repo,
-                                       base_model_filename,
-                                   ],
-                                   outputs=current_base_model)
+    def update_base_model():
+        repo = base_model_repo_options[base_model_repo.value]
+        filename = base_model_filename_options[base_model_filename.value]
+        model.set_base_model(repo, filename)
+        current_base_model.update(value=model.base_model_url)
 
+    change_base_model_button.click(update_base_model)
+    
+demo = gr.Interface(fn=my_function, inputs=[], outputs=[], title="My Interface")
 demo.queue(api_open=False).launch()
