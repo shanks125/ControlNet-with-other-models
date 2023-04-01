@@ -74,9 +74,7 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
-    import gradio as gr
-
-base_model_options = {
+    base_model_options = {
     'Model Option 1': {
         'repo': 'https://example.com/repo1/',
         'filename': 'model1.pt'
@@ -92,38 +90,44 @@ base_model_options = {
 }
 
 with gr.Accordion(label='Base model', open=False):
-    current_base_model = gr.Textbox(label='Current base model',
-                                 default_value=DEFAULT_BASE_MODEL_URL)
+    current_base_model = gr.Text(label='Current base model',
+                                 value=DEFAULT_BASE_MODEL_URL)
     
-    base_model_selector = gr.Select(label='Select base model', 
-                                    choices=list(base_model_options.keys()))
+    base_model_buttons = []
+    for option in base_model_options:
+        button = gr.RadioButton(label=option, value=option)
+        base_model_buttons.append(button)
     
-    base_model_repo = gr.Textbox(label='Base model repo',
-                              lines=1,
+    base_model_repo = gr.Text(label='Base model repo',
+                              max_lines=1,
                               placeholder=DEFAULT_BASE_MODEL_REPO,
-                              live=True)
+                              interactive=ALLOW_CHANGING_BASE_MODEL)
     
-    base_model_filename = gr.Textbox(label='Base model file',
-                                  lines=1,
+    base_model_filename = gr.Text(label='Base model file',
+                                  max_lines=1,
                                   placeholder=DEFAULT_BASE_MODEL_FILENAME,
-                                  live=True)
+                                  interactive=ALLOW_CHANGING_BASE_MODEL)
     
     def update_base_model_options(event):
-        selected_option = base_model_options[base_model_selector.value]
+        selected_option = base_model_options[event['new']]
         base_model_repo.value = selected_option['repo']
         base_model_filename.value = selected_option['filename']
         
-    base_model_selector.changed(update_base_model_options)
+    for button in base_model_buttons:
+        button.observe(update_base_model_options, 'value')
     
     change_base_model_button = gr.Button('Change base model')
     
     gr.Markdown('''- You can use other base models by specifying the repository name and filename. The base model must be compatible with Stable Diffusion v1.5.''')
     
-    def change_base_model():
-        model.set_base_model(base_model_repo.value, base_model_filename.value)
-        current_base_model.value = f"{base_model_repo.value}/{base_model_filename.value}"
-    
-    change_base_model_button.clicked(change_base_model)
+    change_base_model_button.click(fn=model.set_base_model,
+                                   inputs=[
+                                       base_model_repo,
+                                       base_model_filename,
+                                   ],
+                                   outputs=current_base_model)
 
-demo = gr.Interface(fn=my_function, inputs=[], outputs=[], title="My Gradio App")
+    base_model_selector = gr.VBox(base_model_buttons)
+    display(base_model_selector)
+    
 demo.queue(api_open=False).launch()
