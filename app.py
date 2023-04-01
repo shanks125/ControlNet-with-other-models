@@ -74,6 +74,8 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
+import gradio as gr
+
 DEFAULT_BASE_MODEL_REPO = "default_repo"
 DEFAULT_BASE_MODEL_FILENAME = "default_filename"
 DEFAULT_BASE_MODEL_URL = "default_url"
@@ -85,9 +87,13 @@ base_model_options = [
     {'label': 'Option 3', 'value': {'base_model_repo': 'repo3', 'base_model_filename': 'filename3'}}
 ]
 
-model = None  # Initialize your model here
+def placeholder_fn(repo_dropdown, base_model_filename):
+    # Placeholder function that simply returns the base model URL
+    base_model_url = f"https://github.com/{repo_dropdown['base_model_repo']}/{base_model_filename}"
+    return base_model_url
 
 interface = gr.Interface(
+    fn=placeholder_fn,
     inputs=[
         gr.Accordion(label='Base model', open=False, children=[
             gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL),
@@ -107,7 +113,7 @@ interface = gr.Interface(
     description='Change the base model for your application'
 )
 
-def set_base_model(repo_dropdown):
+def set_base_model(repo_dropdown, base_model_filename):
     # Code to set the base model using the selected option from the dropdown
     pass
 
