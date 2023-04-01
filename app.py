@@ -83,7 +83,7 @@ with gr.Blocks(css='style.css') as demo:
 with gr.Accordion(label='Base model', open=False):
     current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
     
-    base_model_select = gr.Select(label='Select a base model', options=base_model_options)
+    base_model_select = gr.inputs.Dropdown(label='Select a base model', choices=base_model_options)
 
     gr.Markdown('''- You can use other base models by selecting an option from the drop-down menu.
 The base model must be compatible with Stable Diffusion v1.5.''')
