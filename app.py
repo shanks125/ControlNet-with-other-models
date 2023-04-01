@@ -74,21 +74,45 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
-    base_model_options = [
+DEFAULT_BASE_MODEL_REPO = "default_repo"
+DEFAULT_BASE_MODEL_FILENAME = "default_filename"
+DEFAULT_BASE_MODEL_URL = "default_url"
+ALLOW_CHANGING_BASE_MODEL = True
+
+base_model_options = [
     {'label': 'Option 1', 'value': {'base_model_repo': 'repo1', 'base_model_filename': 'filename1'}},
     {'label': 'Option 2', 'value': {'base_model_repo': 'repo2', 'base_model_filename': 'filename2'}},
     {'label': 'Option 3', 'value': {'base_model_repo': 'repo3', 'base_model_filename': 'filename3'}}
 ]
 
-with gr.Accordion(label='Base model', open=False):
-    current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
-    
-    base_model_select = gr.inputs.Dropdown(label='Select a base model', choices=base_model_options)
+model = None  # Initialize your model here
 
-    gr.Markdown('''- You can use other base models by selecting an option from the drop-down menu.
-The base model must be compatible with Stable Diffusion v1.5.''')
+interface = gr.Interface(
+    inputs=[
+        gr.Accordion(label='Base model', open=False, children=[
+            gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL),
+            gr.Row(children=[
+                gr.inputs.Dropdown(label='Base model repo', choices=base_model_options),
+                gr.Text(label='Base model file', value=DEFAULT_BASE_MODEL_FILENAME)
+            ]),
+            gr.Markdown(
+                '''- You can use other base models by specifying the repository name and filename.
+                The base model must be compatible with Stable Diffusion v1.5.'''
+            ),
+            gr.Button('Change base model')
+        ])
+    ],
+    outputs=gr.Textbox(label='Base model URL'),
+    title='Base Model Changer',
+    description='Change the base model for your application'
+)
 
-change_base_model_button = gr.Button('Change base model')
-change_base_model_button.click(fn=model.set_base_model, inputs=[base_model_select], outputs=current_base_model)
+def set_base_model(repo_dropdown):
+    # Code to set the base model using the selected option from the dropdown
+    pass
+
+interface.inputs[0][0][3].clicked(set_base_model)
+
+interface.launch()
 
 demo.queue(api_open=False).launch()
