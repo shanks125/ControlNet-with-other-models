@@ -7,6 +7,7 @@ import pathlib
 import shlex
 import subprocess
 
+%%blocks
 import gradio as gr
 
 if os.getenv('SYSTEM') == 'spaces':
