@@ -98,5 +98,5 @@ The base model must be compatible with Stable Diffusion v1.5.''')
                                        base_model_filename,
                                    ],
                                    outputs=current_base_model)
-demo.queue(api_open=False)
+demo.queue()
 demo.launch(debug=True, share=True)
