@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+%%blocks
 from __future__ import annotations
 
 import os
@@ -7,7 +8,6 @@ import pathlib
 import shlex
 import subprocess
 
-%%blocks
 import gradio as gr
 
 if os.getenv('SYSTEM') == 'spaces':
