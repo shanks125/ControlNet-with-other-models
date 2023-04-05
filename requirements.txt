@@ -17,7 +17,6 @@ open-clip-torch
 opencv-contrib-python
 opencv-python-headless
 prettytable
-pytorch-lightning
 safetensors
 timm
 transformers
