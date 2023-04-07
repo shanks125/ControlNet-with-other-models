@@ -74,21 +74,46 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
-    with gr.Accordion(label='Base model', open=False):
-         current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
+    import gradio as gr
+import torch
+
+DEFAULT_BASE_MODEL_URL = 'openai/clip-vit-base-patch32'
+DEFAULT_BASE_MODEL_REPO = 'openai/clip'
+DEFAULT_BASE_MODEL_FILENAME = 'clip_vit_base_patch32.pt'
+ALLOW_CHANGING_BASE_MODEL = True
+
+class Model:
+    def __init__(self, base_model_url):
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model = torch.load(base_model_url, map_location=self.device).to(self.device)
+
+    def generate_images(self, text, num_images=1, clip_args={}):
+        # Function to generate images using the base model
+        pass
+    
+    def set_base_model(self, base_model_repo, base_model_filename):
+        # Function to set the base model
+        pass
+
+model = Model(DEFAULT_BASE_MODEL_URL)
+
+with gr.Accordion(label='Base model', open=False):
+     current_base_model = gr.Textbox(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
     base_models = [
         {"label": "ControlNet v1.5", "value": ["openai-diffusion/ControlNet", "cldm_v15.pt"]},
         {"label": "ControlNet v2.0", "value": ["openai-diffusion/ControlNet", "cldm_v20.pt"]},
         {"label": "CLIPDraw", "value": ["openai-diffusion/CLIPDraw", "clipdraw.pt"]},
         {"label": "StyleGAN2-ADA", "value": ["NVLabs/stylegan2-ada", "ffhq.pkl"]},
     ]
-    base_model_dropdown = gr.Dropdown(label='Select a base model', id='base-model-dropdown', options=base_models, value=base_models[0]['value'])
+    base_model_dropdown = gr.Dropdown(label='Select a base model', choices=base_models, default=base_models[0]['value'])
     change_base_model_button = gr.Button('Change base model')
-    gr.Markdown('''- You can use other base models by selecting from the dropdown menu.
+    gr.Description('''- You can use other base models by selecting from the dropdown menu.
 The base model must be compatible with Stable Diffusion v1.5.''')
 
-change_base_model_button.click(fn=lambda x: model.set_base_model(x['value'][0], x['value'][1]),
-                               inputs=[base_model_dropdown],
-                               outputs=current_base_model)
+change_base_model_button.onclick(lambda: model.set_base_model(base_model_dropdown.value[0], base_model_dropdown.value[1]))
+demo = gr.Interface(fn=model.generate_images, inputs=["text"], outputs="image", capture_session=True)
+
+gr.Interface(lambda: None, [current_base_model, base_model_dropdown, change_base_model_button], title='Change base model').launch() 
+
 demo.queue(api_open=False)
 demo.launch(debug=True, share=True)
