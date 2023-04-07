@@ -75,7 +75,7 @@ with gr.Blocks(css='style.css') as demo:
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
     with gr.Accordion(label='Base model', open=False):
-    current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
+        current_base_model = gr.Text(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
     base_models = [
         {"label": "ControlNet v1.5", "value": ["openai-diffusion/ControlNet", "cldm_v15.pt"]},
         {"label": "ControlNet v2.0", "value": ["openai-diffusion/ControlNet", "cldm_v20.pt"]},
