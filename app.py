@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from __future__ import annotations
 
 import os
@@ -74,66 +72,58 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
-    import gradio as gr
-import torch
+    base_model_options = {'Option 1': {'repo': 'repo1', 'url': 'url1'},
+                      'Option 2': {'repo': 'repo2', 'url': 'url2'},
+                      'Option 3': {'repo': 'repo3', 'url': 'url3'}}
 
-DEFAULT_BASE_MODEL_URL = 'openai/clip-vit-base-patch32'
-DEFAULT_BASE_MODEL_REPO = 'openai/clip'
-DEFAULT_BASE_MODEL_FILENAME = 'clip_vit_base_patch32.pt'
-ALLOW_CHANGING_BASE_MODEL = True
+base_model_selector = gr.Select(label='Base model options', 
+                                options=base_model_options)
 
-class Model:
-    def __init__(self, base_model_url):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model = torch.load(base_model_url, map_location=self.device).to(self.device)
+current_base_model = gr.Text(label='Current base model',
+                             value=DEFAULT_BASE_MODEL_URL)
 
-    def generate_images(self, text, num_images=1, clip_args={}):
-        # Function to generate images using the base model
-        pass
-    
-    def set_base_model(self, base_model_repo, base_model_filename):
-        # Function to set the base model
-        pass
+with gr.Row():
+    base_model_repo = gr.Text(label='Base model repo',
+                              max_lines=1,
+                              placeholder=DEFAULT_BASE_MODEL_REPO,
+                              interactive=ALLOW_CHANGING_BASE_MODEL)
+    base_model_filename = gr.Text(
+        label='Base model file',
+        max_lines=1,
+        placeholder=DEFAULT_BASE_MODEL_FILENAME,
+        interactive=ALLOW_CHANGING_BASE_MODEL)
 
-model = Model(DEFAULT_BASE_MODEL_URL)
+def update_base_model(change):
+    selected_option = base_model_options[change['new']]
+    base_model_repo.value = selected_option['repo']
+    current_base_model.value = selected_option['url']
 
-import gradio as gr
-import torch
+base_model_selector.observe(update_base_model, 'value')
 
-DEFAULT_BASE_MODEL_URL = 'openai/clip-vit-base-patch32'
-DEFAULT_BASE_MODEL_REPO = 'openai/clip'
-DEFAULT_BASE_MODEL_FILENAME = 'clip_vit_base_patch32.pt'
-ALLOW_CHANGING_BASE_MODEL = True
+change_base_model_button = gr.Button('Change base model')
 
-class Model:
-    def __init__(self, base_model_url):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model = torch.load(base_model_url, map_location=self.device).to(self.device)
-
-    def generate_images(self, text, num_images=1, clip_args={}):
-        # Function to generate images using the base model
-        pass
-    
-    def set_base_model(self, base_model_repo, base_model_filename):
-        # Function to set the base model
-        pass
-
-model = Model(DEFAULT_BASE_MODEL_URL)
-
-with gr.Accordion(label='Base model', open=False):
-    current_base_model = gr.Textbox(label='Current base model', value=DEFAULT_BASE_MODEL_URL)
-    base_models = [
-        {"label": "ControlNet v1.5", "value": ["openai-diffusion/ControlNet", "cldm_v15.pt"]},
-        {"label": "ControlNet v2.0", "value": ["openai-diffusion/ControlNet", "cldm_v20.pt"]},
-        {"label": "CLIPDraw", "value": ["openai-diffusion/CLIPDraw", "clipdraw.pt"]},
-        {"label": "StyleGAN2-ADA", "value": ["NVLabs/stylegan2-ada", "ffhq.pkl"]},
-    ]
-    base_model_dropdown = gr.Dropdown(label='Select a base model', choices=base_models, default=base_models[0]['value'])
-    change_base_model_button = gr.Button('Change base model')
-    gr.Description('''- You can use other base models by selecting from the dropdown menu.
+gr.Markdown(
+    '''- You can use other base models by selecting the option from the dropdown menu.
 The base model must be compatible with Stable Diffusion v1.5.''')
 
-change_base_model_button.onclick(lambda: model.set_base_model(base_model_dropdown.value[0], base_model_dropdown.value[1]))
-demo = gr.Interface(fn=model.generate_images, inputs=["text"], outputs="image", capture_session=True)
+change_base_model_button.click(fn=model.set_base_model,
+                               inputs=[
+                                   base_model_repo,
+                                   base_model_filename,
+                               ],
+                               outputs=current_base_model)
 
-gr.Interface(lambda: None, [current_base_model, base_model_dropdown, change_base_model_button], title='Change base model').launch(share=True) 
+with gr.Accordion(label='Base model', open=False):
+    gr.write('Select a base model option:')
+    gr.write(base_model_selector)
+    gr.write('')
+    gr.write('Current base model:')
+    gr.write(current_base_model)
+    gr.write('')
+    gr.write('Specify a custom base model:')
+    gr.write(base_model_repo)
+    gr.write(base_model_filename)
+    gr.write(change_base_model_button)
+    
+demo.queue(api_open=False)
+demo.launch(debug=True, share=True)
