@@ -73,22 +73,43 @@ with gr.Blocks(css='style.css') as demo:
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
     with gr.Accordion(label='Base model', open=False):
-         current_base_model = gr.Text(label='Current base model',
+    current_base_model = gr.Text(label='Current base model',
                                  value=DEFAULT_BASE_MODEL_URL)
-    
-    base_model_options = [('Model 1', 'model1_repo_url'), ('Model 2', 'model2_repo_url'), ('Model 3', 'model3_repo_url')]
-    base_model_dropdown = gr.Dropdown(label='Select a base model', options=base_model_options)
-    
-    change_base_model_button = gr.Button('Change base model')
-    
-    gr.Markdown('''- You can use other base models by selecting from the available options. The base model must be compatible with Stable Diffusion v1.5.''')
 
-change_base_model_button.click(fn=model.set_base_model,
-                               inputs=[
-                                   base_model_dropdown.value,
-                                   DEFAULT_BASE_MODEL_FILENAME,
-                               ],
-                               outputs=current_base_model)
-    
+    base_model_repo_options = ['repo1', 'repo2', 'repo3'] # Replace with actual options
+    selected_base_model_repo = gr.dropdown(label='Base model repo',
+                                           options=base_model_repo_options)
+    DEFAULT_BASE_MODEL_REPO = selected_base_model_repo.value
+
+    base_model_url_options = ['url1', 'url2', 'url3'] # Replace with actual options
+    selected_base_model_url = gr.dropdown(label='Base model URL',
+                                           options=base_model_url_options)
+    DEFAULT_BASE_MODEL_URL = selected_base_model_url.value
+
+    change_base_model_button = gr.Button('Change base model')
+    gr.Markdown('''- You can use other base models by specifying the repository name and filename.
+The base model must be compatible with Stable Diffusion v1.5.''')
+
+    @gr.outputs
+    def set_base_model_output(repo, filename):
+        model.set_base_model(repo, filename)
+        return DEFAULT_BASE_MODEL_URL
+
+    @gr.callback(
+        inputs=[
+            selected_base_model_repo,
+            base_model_filename,
+            change_base_model_button,
+        ],
+        outputs=[set_base_model_output],
+        state=[current_base_model],
+    )
+    def set_base_model_callback(repo, filename, _):
+        DEFAULT_BASE_MODEL_REPO = repo['value']
+        DEFAULT_BASE_MODEL_FILENAME = filename['value']
+        url = model.set_base_model(DEFAULT_BASE_MODEL_REPO, DEFAULT_BASE_MODEL_FILENAME)
+        current_base_model.value = url
+        return DEFAULT_BASE_MODEL_URL
+
 demo.queue(api_open=False)
 demo.launch(debug=True, share=True)
