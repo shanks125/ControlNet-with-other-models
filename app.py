@@ -73,7 +73,7 @@ with gr.Blocks(css='style.css') as demo:
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
     with gr.Accordion(label='Base model', open=False):
-    current_base_model = gr.Text(label='Current base model',
+         current_base_model = gr.Text(label='Current base model',
                                  value=DEFAULT_BASE_MODEL_URL)
 
     base_model_repo_options = ['repo1', 'repo2', 'repo3'] # Replace with actual options
