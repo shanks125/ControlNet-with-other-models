@@ -87,11 +87,11 @@ with gr.Blocks(css='style.css') as demo:
     gr.Markdown('''- You can use other base models by selecting from the dropdown menu.
 The base model must be compatible with Stable Diffusion v1.5.''')
 
-    change_base_model_button.click(fn=lambda x: model.set_base_model(x['value'][0], x['value'][1]),
-                                   inputs=[base_model_dropdown],
-                                   outputs=current_base_model)
-    
-demo = gr.Interface(inputs=[], outputs=[current_base_model], live=True, capture_session=True)
-demo.interface_desc['layout']['bottom']['children'] = [base_model_dropdown, change_base_model_button]
+    def update_base_model(event):
+        base_model = base_model_dropdown.value
+        model.set_base_model(base_model[0], base_model[1])
+        current_base_model.value = f'{base_model[0]}/{base_model[1]}'
+
+    change_base_model_button.click(update_base_model, inputs=[], outputs=[])
 demo.queue(api_open=False)
 demo.launch(debug=True, share=True)
