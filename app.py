@@ -136,6 +136,4 @@ The base model must be compatible with Stable Diffusion v1.5.''')
 change_base_model_button.onclick(lambda: model.set_base_model(base_model_dropdown.value[0], base_model_dropdown.value[1]))
 demo = gr.Interface(fn=model.generate_images, inputs=["text"], outputs="image", capture_session=True)
 
-gr.Interface(lambda: None, [current_base_model, base_model_dropdown, change_base_model_button], title='Change base model').launch() 
-demo.queue(api_open=False)
-demo.launch(debug=True, share=True)
+gr.Interface(lambda: None, [current_base_model, base_model_dropdown, change_base_model_button], title='Change base model').launch(share=True) 
