@@ -85,10 +85,10 @@ with gr.Blocks(css='style.css') as demo:
     base_model_dropdown = gr.Dropdown(label='Select a base model', options=base_models, value=base_models[0]['value'])
     change_base_model_button = gr.Button('Change base model')
     gr.Markdown('''- You can use other base models by selecting from the dropdown menu.
-The base model must be compatible with Stable Diffusion v1.5.''')
+    The base model must be compatible with Stable Diffusion v1.5.''')
 
-change_base_model_button.click(fn=lambda x: model.set_base_model(x['value'][0], x['value'][1]),
-                               inputs=[base_model_dropdown],
-                               outputs=current_base_model)
+    change_base_model_button.click(fn=lambda x: model.set_base_model(x['value'][0], x['value'][1]),
+                                   inputs=[base_model_dropdown],
+                                   outputs=current_base_model)
 demo.queue(api_open=False)
 demo.launch(debug=True, share=True)
