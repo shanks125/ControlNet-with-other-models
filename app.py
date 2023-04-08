@@ -74,29 +74,38 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
-    with gr.Accordion(label='Base model', open=False):
-        current_base_model = gr.Text(label='Current base model',
-                                     value=DEFAULT_BASE_MODEL_URL)
-        with gr.Row():
-            base_model_repo = gr.Text(label='Base model repo',
-                                      max_lines=1,
-                                      placeholder=DEFAULT_BASE_MODEL_REPO,
-                                      interactive=ALLOW_CHANGING_BASE_MODEL)
-            base_model_filename = gr.Text(
-                label='Base model file',
-                max_lines=1,
-                placeholder=DEFAULT_BASE_MODEL_FILENAME,
-                interactive=ALLOW_CHANGING_BASE_MODEL)
-        change_base_model_button = gr.Button('Change base model')
-        gr.Markdown(
-            '''- You can use other base models by specifying the repository name and filename.
+    # Define the available base models as a dictionary
+base_models = {
+    "Model 1": {
+        "repo": "https://github.com/user/model1_repo.git",
+        "filename": "model1.pth",
+    },
+    "Model 2": {
+        "repo": "https://github.com/user/model2_repo.git",
+        "filename": "model2.pth",
+    },
+    # Add more models if needed
+}
+
+def set_base_model(model_name):
+    return base_models[model_name]["repo"], base_models[model_name]["filename"]
+
+with gr.Accordion(label='Base model', open=False):
+    current_base_model = gr.Text(label='Current base model',
+                                 value=DEFAULT_BASE_MODEL_URL)
+
+    base_model_dropdown = gr.Dropdown(
+        label='Choose a base model',
+        options=list(base_models.keys()),
+        default=list(base_models.keys())[0],  # Set the default option
+    )
+    change_base_model_button = gr.Button('Change base model')
+    gr.Markdown(
+        '''- You can use other base models by selecting from the dropdown menu.
 The base model must be compatible with Stable Diffusion v1.5.''')
 
-    change_base_model_button.click(fn=model.set_base_model,
-                                   inputs=[
-                                       base_model_repo,
-                                       base_model_filename,
-                                   ],
-                                   outputs=current_base_model)
+    change_base_model_button.click(fn=set_base_model,
+                                   inputs=[base_model_dropdown],
+                                   outputs=[base_model_repo, base_model_filename])
 demo.queue(api_open=False)
 demo.launch(debug=True, share=True)
