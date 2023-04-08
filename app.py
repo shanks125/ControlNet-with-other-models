@@ -108,7 +108,7 @@ with gr.Accordion(label='Base model', open=False):
         gr.Markdown(
             '''- You can use other base models by specifying the repository name and filename.  
 The base model must be compatible with Stable Diffusion v1.5.''')
-    change_base_model_button.click(fn=model.set_base_model,
+           change_base_model_button.click(fn=model.set_base_model,
                                    inputs=[
                                        base_model_repo,
                                        base_model_filename,
