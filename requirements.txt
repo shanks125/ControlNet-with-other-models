@@ -1,7 +1,7 @@
-https://download.pytorch.org/whl/cu118/torch-2.0.0%2Bcu118-cp39-cp39-linux_x86_64.whl
-https://download.pytorch.org/whl/cu118/torchvision-0.15.1%2Bcu118-cp39-cp39-linux_x86_64.whl
-https://download.pytorch.org/whl/cu118/torchaudio-2.0.1%2Bcu118-cp39-cp39-linux_x86_64.whl
-https://download.pytorch.org/whl/torchtext-0.15.1%2Bcpu-cp39-cp39-linux_x86_64.whl
+torch
+torchvision
+torchaudio
+torchtext
 pytorch-lightning==1.9.4
 gradio==3.18.1b7
 xformers
