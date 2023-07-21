@@ -74,29 +74,30 @@ with gr.Blocks(css='style.css') as demo:
         with gr.TabItem('Normal map'):
             create_demo_normal(model.process_normal, max_images=MAX_IMAGES)
 
-    with gr.Accordion(label='Base model', open=False):
-        current_base_model = gr.Text(label='Current base model',
-                                     value=DEFAULT_BASE_MODEL_URL)
-        with gr.Row():
-            base_model_repo = gr.Text(label='Base model repo',
-                                      max_lines=1,
-                                      placeholder=DEFAULT_BASE_MODEL_REPO,
-                                      interactive=ALLOW_CHANGING_BASE_MODEL)
-            base_model_filename = gr.Text(
-                label='Base model file',
-                max_lines=1,
-                placeholder=DEFAULT_BASE_MODEL_FILENAME,
-                interactive=ALLOW_CHANGING_BASE_MODEL)
-        change_base_model_button = gr.Button('Change base model')
-        gr.Markdown(
-            '''- You can use other base models by specifying the repository name and filename.
-The base model must be compatible with Stable Diffusion v1.5.''')
+    base_model_options = ["Model 1", "Model 2", "Model 3"] 
 
-    change_base_model_button.click(fn=model.set_base_model,
-                                   inputs=[
-                                       base_model_repo,
-                                       base_model_filename,
-                                   ],
-                                   outputs=current_base_model)
+base_model_dropdown = gr.Dropdown(choices=base_model_options, 
+                                  label="Select base model")
+
+# Remove the previous text inputs
+# base_model_repo = gr.Text(...) 
+# base_model_filename = gr.Text(...)
+
+change_base_model_button = gr.Button('Change base model') 
+
+gr.Markdown(...) # Keep the markdown text
+
+change_base_model_button.click(fn=model.set_base_model,
+                               inputs=[base_model_dropdown], 
+                               outputs=current_base_model)
+
+# Update set_base_model function to lookup repo/filename 
+# based on dropdown value
+def set_base_model(model, base_model):
+    if base_model == "Model 1":
+        repo = "repo1"
+        filename = "model1.ckpt" 
+    elif base_model == "Model 2":
+       ...
 demo.queue(api_open=False)
 demo.launch(share=True,debug=True,enable_queue=True)
